@@ -184,6 +184,7 @@ esp_err_t esp_ota_write(esp_ota_handle_t handle, const void *data, size_t size)
     // find ota handle in linked list
     for (it = LIST_FIRST(&s_ota_ops_entries_head); it != NULL; it = LIST_NEXT(it, entries)) {
         if (it->handle == handle) {
+
             if (it->need_erase) {
                 // must erase the partition before writing to it
                 uint32_t first_sector = it->wrote_size / SPI_FLASH_SEC_SIZE;
@@ -199,6 +200,7 @@ esp_err_t esp_ota_write(esp_ota_handle_t handle, const void *data, size_t size)
                     return ret;
                 }
             }
+
 
             if (it->wrote_size == 0 && it->partial_bytes == 0 && size > 0 && data_bytes[0] != ESP_IMAGE_HEADER_MAGIC) {
                 ESP_LOGE(TAG, "OTA image has invalid magic byte (expected 0xE9, saw 0x%02x)", data_bytes[0]);
@@ -238,6 +240,7 @@ esp_err_t esp_ota_write(esp_ota_handle_t handle, const void *data, size_t size)
             }
 
             ret = esp_partition_write(it->part, it->wrote_size, data_bytes, size);
+
             if(ret == ESP_OK){
                 it->wrote_size += size;
             }

@@ -88,9 +88,13 @@ extern "C" {
 // Enabled device class driver
 #define CFG_TUD_CDC                 CONFIG_TINYUSB_CDC_ENABLED
 #define CFG_TUD_MSC                 CONFIG_TINYUSB_MSC_ENABLED
-#define CFG_TUD_HID                 CONFIG_TINYUSB_HID_ENABLED
+#define CFG_TUD_HID                 1//CONFIG_TINYUSB_HID_ENABLED
 #define CFG_TUD_MIDI                CONFIG_TINYUSB_MIDI_ENABLED
 #define CFG_TUD_CUSTOM_CLASS        CONFIG_TINYUSB_CUSTOM_CLASS_ENABLED
+
+
+
+#define CONFIG_TINYUSB_HID_BUFSIZE 64
 
 #ifdef __cplusplus
 }

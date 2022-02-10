@@ -22,8 +22,9 @@ static char *s_str_descriptor[USB_STRING_DESCRIPTOR_ARRAY_SIZE];
 
 #if CFG_TUD_HID //HID Report Descriptor
 uint8_t const desc_hid_report[] = {
-    TUD_HID_REPORT_DESC_KEYBOARD(HID_REPORT_ID(REPORT_ID_KEYBOARD), ),
-    TUD_HID_REPORT_DESC_MOUSE(HID_REPORT_ID(REPORT_ID_MOUSE), )
+    //TUD_HID_REPORT_DESC_KEYBOARD(HID_REPORT_ID(REPORT_ID_KEYBOARD)),
+    //TUD_HID_REPORT_DESC_MOUSE(HID_REPORT_ID(REPORT_ID_MOUSE))
+    TUD_HID_REPORT_DESC_GENERIC_INOUT(CFG_TUD_HID_EP_BUFSIZE)
 };
 #endif
 
@@ -41,7 +42,8 @@ uint8_t const desc_configuration[] = {
 #   endif
 #   if CFG_TUD_HID
     // Interface number, string index, protocol, report descriptor len, EP In address, size & polling interval
-    TUD_HID_DESCRIPTOR(ITF_NUM_HID, 6, HID_PROTOCOL_NONE, sizeof(desc_hid_report), 0x84, 16, 10)
+    //TUD_HID_DESCRIPTOR(ITF_NUM_HID, 6, HID_PROTOCOL_NONE, sizeof(desc_hid_report), 0x84, 64, 1)
+    TUD_HID_INOUT_DESCRIPTOR(ITF_NUM_HID, 6, HID_PROTOCOL_NONE, sizeof(desc_hid_report), 0x04, 0x84, 64, 1)
 #   endif
 };
 
@@ -120,7 +122,8 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid)
  * @return uint8_t const*
  */
 #if CFG_TUD_HID
-uint8_t const *tud_hid_descriptor_report_cb(void)
+//uint8_t const * tud_hid_descriptor_report_cb(void)
+uint8_t const * tud_hid_descriptor_report_cb(uint8_t itf)
 {
     return desc_hid_report;
 }

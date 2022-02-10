@@ -57,7 +57,7 @@ enum {
 
 enum {
     TUSB_DESC_TOTAL_LEN = TUD_CONFIG_DESC_LEN + CFG_TUD_CDC * TUD_CDC_DESC_LEN + CFG_TUD_MSC * TUD_MSC_DESC_LEN +
-                       CFG_TUD_HID * TUD_HID_DESC_LEN
+                       CFG_TUD_HID * TUD_HID_INOUT_DESC_LEN
 };
 
 bool tusb_desc_set;
