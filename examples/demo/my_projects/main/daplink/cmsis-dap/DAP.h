@@ -326,7 +326,7 @@ __STATIC_FORCEINLINE void PIN_DELAY_SLOW (uint32_t delay) {
   : "+l" (delay) : : "cc"
   );
   #else
-  uint32_t count = delay;
+  volatile uint32_t count = delay;
   while (--count);
   #endif
 }
@@ -334,18 +334,20 @@ __STATIC_FORCEINLINE void PIN_DELAY_SLOW (uint32_t delay) {
 
 // Fixed delay for fast clock generation
 #ifndef DELAY_FAST_CYCLES
-#define DELAY_FAST_CYCLES       0U      // Number of cycles: 0..3
+#define DELAY_FAST_CYCLES       3U      // Number of cycles: 0..3
 #endif
 __STATIC_FORCEINLINE void PIN_DELAY_FAST (void) {
 #if (DELAY_FAST_CYCLES >= 1U)
-  __NOP();
+  //__NOP();
 #endif
 #if (DELAY_FAST_CYCLES >= 2U)
-  __NOP();
+  //__NOP();
 #endif
 #if (DELAY_FAST_CYCLES >= 3U)
-  __NOP();
+  //__NOP();
 #endif
+  volatile uint32_t count = DELAY_FAST_CYCLES;
+  while (--count);
 }
 
 #ifdef  __cplusplus

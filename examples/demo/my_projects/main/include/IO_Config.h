@@ -5,9 +5,12 @@
 
 #define GPIO_OUTPUT_IO_0        33
 #define GPIO_OUTPUT_IO_1        34
-#define SWCLK_TCK_PIN_PORT      37
-#define SWDIO_OUT_PIN_PORT      38
-#define SWDIO_IN_PIN_PORT       38
+// #define SWCLK_TCK_PIN_PORT      37
+// #define SWDIO_OUT_PIN_PORT      38
+// #define SWDIO_IN_PIN_PORT       38
+#define SWCLK_TCK_PIN_PORT      17
+#define SWDIO_OUT_PIN_PORT      18
+#define SWDIO_IN_PIN_PORT       18
 #define nRESET_PIN_PORT         36
 
 

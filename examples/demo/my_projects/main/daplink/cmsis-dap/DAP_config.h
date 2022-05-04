@@ -46,7 +46,7 @@ Provides definitions about:
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
-#define CPU_CLOCK              1// SystemCoreClock        ///< Specifies the CPU Clock in Hz
+#define CPU_CLOCK              160000000 // SystemCoreClock        ///< Specifies the CPU Clock in Hz
 
 /// Number of processor cycles for I/O Port write operations.
 /// This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
