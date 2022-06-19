@@ -2,7 +2,7 @@
 #include <esp_ota_ops.h>
 #include <esp_system.h>
 #include "usbd_user_ota.h"
-
+#include "mbedtls/aes.h"
 /*
  *  Function Declare 
  */
@@ -37,6 +37,9 @@ typedef struct usbd_user_ota_handle usbd_user_ota_t;
  */
 static usbd_user_ota_t* _ota_handle = NULL;
 static bool             _ota_inited = false;
+
+ unsigned char _firmware_aes_cbc_iv[16];
+ unsigned char _firmware_aes_cbc_key[16] = {0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xA,0xB,0xC,0XD,0xE,0xF};
 
 uint32_t DAP_ProcessVendorCommand_OTA(const uint8_t *request, uint8_t *response)
 {
@@ -117,6 +120,11 @@ void OtaCommandBegin()
     else
     {
         _ota_inited = true;
+        // init iv key
+        for(int i =0;i<16;i++)
+        {
+            _firmware_aes_cbc_iv[i]=0x1;
+        }
     }
 }
 
@@ -129,16 +137,35 @@ uint32_t OtaCommandWrite(const uint8_t *request, uint8_t *response)
         return (1U << 16) + 1U;;
     }
 
-    err = esp_ota_write(_ota_handle->update_handle, (request+1), *request);
+    unsigned char dec_plain[64] = {0};
+    mbedtls_aes_context aes_ctx;
+    uint8_t len = *request;
+    mbedtls_aes_init(&aes_ctx);
+    mbedtls_aes_setkey_enc(&aes_ctx,_firmware_aes_cbc_key,128);
+    // handle data
+    if(len%16==0)
+    {
+        mbedtls_aes_crypt_cbc(&aes_ctx,MBEDTLS_AES_DECRYPT,len,_firmware_aes_cbc_iv,(request+1),dec_plain);
+    }
+    else
+    {
+        *response = 0xFF;
+        goto exit;
+    }
+
+    err = esp_ota_write(_ota_handle->update_handle, dec_plain, len);
+
     if(err!=ESP_OK)
     {
         *response = 0xFF;
+        printf("[ERROR]\n");
     }
     else
     {
         *response = 1;
     }
-    
+exit:
+    mbedtls_aes_free(&aes_ctx);
     return (1U << 16) + 2U;
 }
 
